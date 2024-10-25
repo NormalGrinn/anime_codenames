@@ -1,4 +1,5 @@
 use poise::serenity_prelude as serenity;
+use dotenv::dotenv;
 
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
@@ -7,9 +8,13 @@ struct Data {}
 mod commands;
 mod codename_game;
 
+pub mod models;
+pub mod schema;
+
 #[tokio::main]
 async fn main() {
-    let token = std::env::var("DISCORD_TOKEN").expect("missing DISCORD_TOKEN");
+    dotenv().ok();
+    let token = std::env::var("TOKEN").expect("missing TOKEN");
     let intents = serenity::GatewayIntents::non_privileged();
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
