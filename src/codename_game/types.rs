@@ -1,6 +1,14 @@
 use diesel::{prelude::Queryable, sql_types::Bool};
+use strum_macros::{EnumString, Display};
+use serde::{Serialize, Deserialize};
+use diesel::deserialize::{self, FromSql};
+use diesel::serialize::{self, ToSql, Output};
+use diesel::sql_types::Text;
+use diesel::sqlite::Sqlite;
+use std::io::Write;
 
-#[derive(Debug)]
+#[derive(EnumString, Display, Debug, Serialize, Deserialize)]
+#[strum(serialize_all = "snake_case")] 
 pub enum Team {
     Red,
     Blue
@@ -14,7 +22,7 @@ pub enum Colour {
     Black,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Role {
     Player,
     Spymaster
@@ -34,7 +42,7 @@ pub struct Name {
 
 #[derive(Queryable, Debug)]
 pub struct Anime {
-    anime_id: i32,
+    anime_id: u64,
     anime_names: Name,
 }
 
@@ -47,13 +55,12 @@ pub struct Card {
     selected: Bool,
 }
 
-#[derive(Queryable, Debug)]
+#[derive(Serialize, Deserialize, Queryable, Debug)]
 pub struct PlayerInfo {
-    player_id: i32,
-    player_name: String,
-    player_list: Option<Vec<String>>,
-    player_team: Option<Team>,
-    player_role: Option<Role>,
+    pub player_id: u64,
+    pub player_name: String,
+    pub player_team: Team,
+    pub player_role: Option<Role>,
 }
 
 #[derive(Queryable, Debug)]
@@ -66,9 +73,3 @@ pub struct GameInfo {
     blue_guesses_left: i32,
     red_guesses_left: i32,
 }
-
-// game:
-// current_team colour,
-// current_role role,
-// guesses_left int,
-// current_phase phase

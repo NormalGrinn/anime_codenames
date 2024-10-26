@@ -7,6 +7,7 @@ struct Data {}
 
 mod commands;
 mod codename_game;
+mod database;
 
 pub mod models;
 pub mod schema;
@@ -18,7 +19,10 @@ async fn main() {
     let intents = serenity::GatewayIntents::non_privileged();
     let framework = poise::Framework::builder()
         .options(poise::FrameworkOptions {
-            commands: vec![commands::age::age()],
+            commands: vec!  [   commands::age::age(),
+                                commands::start_codenames::start_codenames(),
+
+                            ],
             ..Default::default()
         })
         .setup(|ctx, _ready, framework| {
