@@ -8,3 +8,12 @@ diesel::table! {
         game -> Text,
     }
 }
+
+diesel::table! {
+    clue_info (id) {
+        id -> BigInt,
+        channel_id -> BigInt,
+        clue_type -> Text,
+        clue_body -> Text,
+    }
+}

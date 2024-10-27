@@ -22,6 +22,7 @@ async fn main() {
             commands: vec!  [   commands::age::age(),
                                 commands::start_codenames::start_codenames(),
                                 commands::join_team::join_team(),
+                                commands::add_list::add_list()
                             ],
             ..Default::default()
         })

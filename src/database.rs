@@ -5,8 +5,10 @@ use diesel::{prelude::*, result::Error};
 use dotenv::dotenv;
 use std::env;
 
+use crate::codename_game::anilist_api;
 use crate::codename_game::types::PlayerInfo;
-use crate::models::NewPlayer;
+use crate::models::{NewClue, NewPlayer};
+use crate::schema::clue_info;
 use crate::schema::games::dsl::*;
 use crate::{codename_game::types, models::NewGame, schema::{self, games}};
 
@@ -56,4 +58,19 @@ pub fn add_player(id: i64, player_id: u64, player_name: &String, player_team: ty
     .execute(&mut conn)?;
     
     Ok(res)
+}
+
+pub async fn add_anime_clue(id: i64, username: &str) -> Result<usize, Error>{
+    let anime_names = serde_json::to_string(&anilist_api::get_list::get_anime_names(username).await).expect("Error serialzing anime names");
+    let clue_type_string = serde_json::to_string(&types::ClueType::AnimeNames).expect("Error serialzing clue type");
+    let mut conn = establish_connection();
+    let newclue = NewClue {
+        channel_id: id,
+        clue_type: clue_type_string,
+        clue_body: anime_names,
+    };
+    let res = diesel::insert_into(clue_info::table)
+    .values(newclue)
+    .execute(&mut conn);
+    res
 }

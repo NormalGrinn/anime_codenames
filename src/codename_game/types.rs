@@ -8,6 +8,11 @@ use diesel::sqlite::Sqlite;
 use std::io::Write;
 use std::borrow::Cow;
 
+#[derive(Deserialize, Serialize)]
+pub enum ClueType {
+    AnimeNames
+}
+
 #[derive(EnumString, Display, Debug, Serialize, Deserialize, Clone)]
 #[strum(serialize_all = "snake_case")] 
 pub enum Team {
