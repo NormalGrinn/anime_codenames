@@ -7,9 +7,10 @@ use std::env;
 
 use crate::codename_game::anilist_api;
 use crate::codename_game::types::PlayerInfo;
-use crate::models::{NewClue, NewPlayer};
-use crate::schema::clue_info::*;
+use crate::models::{self, NewClue, NewPlayer};
+use crate::schema;
 use crate::schema::games::dsl::*;
+use crate::schema::clue_info::dsl::*;
 use crate::{codename_game::types, models::NewGame, schema::{clue_info, games}};
 
 pub fn establish_connection() -> SqliteConnection {
@@ -61,8 +62,9 @@ pub fn add_player(id: i64, player_id: u64, player_name: &String, player_team: ty
 }
 
 pub async fn add_anime_clue(id: i64, username: &str) -> Result<usize, Error>{
-    let anime_names = serde_json::to_string(&anilist_api::get_list::get_anime_names(username).await).expect("Error serialzing anime names");
-    let clue_type_string = serde_json::to_string(&types::ClueType::AnimeNames).expect("Error serialzing clue type");
+    let anime_names: String = serde_json::to_string(&anilist_api::get_list::get_anime_names(username).await).expect("Error serialzing anime names");
+    let clue_type_string: String = serde_json::to_string(&types::ClueType::AnimeNames).expect("Error serialzing clue type");
+    println!("{}", clue_type_string);
     let mut conn = establish_connection();
     let newclue = NewClue {
         channel_id: id,
@@ -72,5 +74,12 @@ pub async fn add_anime_clue(id: i64, username: &str) -> Result<usize, Error>{
     let res = diesel::insert_into(clue_info::table)
     .values(newclue)
     .execute(&mut conn);
+    res
+}
+
+pub fn get_clue_info(id: i64) -> Result<Vec<models::ClueInfo>, Error> {
+    let mut conn = establish_connection();
+    let res = clue_info.filter(clue_info::channel_id.eq(id))
+    .load::<models::ClueInfo>(&mut conn);
     res
 }

@@ -8,7 +8,7 @@ use diesel::sqlite::Sqlite;
 use std::io::Write;
 use std::borrow::Cow;
 
-#[derive(Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum ClueType {
     AnimeNames
 }
@@ -20,7 +20,7 @@ pub enum Team {
     Blue
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Colour {
     Red,
     Blue,
@@ -54,11 +54,11 @@ pub struct Anime {
 
 #[derive(Queryable, Debug)]
 pub struct Card {
-    location: i32,
-    names: Vec<String>,
-    colour: Colour,
-    exposed: Bool,
-    selected: Bool,
+    pub location: i32,
+    pub names: String,
+    pub colour: Colour,
+    pub exposed: bool,
+    pub selected: Option<Team>,
 }
 
 #[derive(Serialize, Deserialize, Queryable, Debug, Clone)]
