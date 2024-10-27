@@ -6,6 +6,7 @@ edition = "2021"
 [dependencies]
 diesel = {version = "2.2.4", features = ["sqlite"]}
 dotenv = "0.15.0"
+image = "0.25.4"
 poise = "0.6.1"
 reqwest = "0.12.8"
 serde = "1.0.213"

@@ -20,7 +20,7 @@ pub struct Game {
 #[diesel(table_name = crate::schema::clue_info)]
 #[diesel(check_for_backend(diesel::sqlite::Sqlite))]
 pub struct ClueInfo {
-    pub id: i64,
+    pub clue_id: i32,
     pub channel_id: i64,
     pub clue_type: String,
     pub clue_body: String,

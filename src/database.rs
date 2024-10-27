@@ -8,9 +8,9 @@ use std::env;
 use crate::codename_game::anilist_api;
 use crate::codename_game::types::PlayerInfo;
 use crate::models::{NewClue, NewPlayer};
-use crate::schema::clue_info;
+use crate::schema::clue_info::*;
 use crate::schema::games::dsl::*;
-use crate::{codename_game::types, models::NewGame, schema::{self, games}};
+use crate::{codename_game::types, models::NewGame, schema::{clue_info, games}};
 
 pub fn establish_connection() -> SqliteConnection {
     dotenv().ok();
