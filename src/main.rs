@@ -21,7 +21,7 @@ async fn main() {
         .options(poise::FrameworkOptions {
             commands: vec!  [   commands::age::age(),
                                 commands::start_codenames::start_codenames(),
-
+                                commands::join_team::join_team(),
                             ],
             ..Default::default()
         })

@@ -6,8 +6,9 @@ use diesel::serialize::{self, ToSql, Output};
 use diesel::sql_types::Text;
 use diesel::sqlite::Sqlite;
 use std::io::Write;
+use std::borrow::Cow;
 
-#[derive(EnumString, Display, Debug, Serialize, Deserialize)]
+#[derive(EnumString, Display, Debug, Serialize, Deserialize, Clone)]
 #[strum(serialize_all = "snake_case")] 
 pub enum Team {
     Red,
@@ -22,7 +23,7 @@ pub enum Colour {
     Black,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub enum Role {
     Player,
     Spymaster
@@ -55,7 +56,7 @@ pub struct Card {
     selected: Bool,
 }
 
-#[derive(Serialize, Deserialize, Queryable, Debug)]
+#[derive(Serialize, Deserialize, Queryable, Debug, Clone)]
 pub struct PlayerInfo {
     pub player_id: u64,
     pub player_name: String,
@@ -72,4 +73,21 @@ pub struct GameInfo {
     round_guesses_left: i32,
     blue_guesses_left: i32,
     red_guesses_left: i32,
+}
+
+impl PlayerInfo {
+    pub fn update_or_insert(players: &mut Vec<PlayerInfo>, new_player: PlayerInfo) {
+        if players.is_empty() {
+            players.push(new_player);
+            return;
+        }
+        match players.iter_mut().find(|p| p.player_id == new_player.player_id) {
+            Some(existing_player) => {
+                *existing_player = new_player;
+            }
+            None => {
+                players.push(new_player);
+            }
+        }
+    }
 }

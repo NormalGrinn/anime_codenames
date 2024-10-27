@@ -3,8 +3,8 @@
 diesel::table! {
     games (channel_id) {
         channel_id -> BigInt,
-        players -> Nullable<Text>,
-        board -> Nullable<Text>,
-        game -> Nullable<Text>,
+        players -> Text,
+        board -> Text,
+        game -> Text,
     }
 }
